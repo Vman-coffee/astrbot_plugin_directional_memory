@@ -433,6 +433,23 @@ class AdapterTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(request.system_prompt, "existing persona")
         self.assertEqual(request.contexts, [])
 
+    async def test_same_owner_keeps_distinct_private_and_group_personas(self):
+        await self.seed()
+        for group, persona in ((None, "私聊专属人格"), ("1001", "A群指定人格"), ("1002", "B群指定人格")):
+            with self.subTest(group=group):
+                event = Event("偏好", group=group)
+                event.set_extra("_trace_persona_id", persona)
+                request = self.request()
+                request.system_prompt = persona + "：保持当前称呼和说话方式。"
+                original = request.system_prompt
+                await self.plugin.inject_memory(event, request)
+                self.assertEqual(request.system_prompt, original)
+                self.assertEqual(event.get_extra("_trace_persona_id"), persona)
+                block = "\n".join(p.text for p in request.extra_user_content_parts)
+                self.assertIn("保持当前会话指定的人格", block)
+                if group is not None:
+                    self.assertNotIn("PRIVATE_ALICE", block)
+
     async def test_group_injected_block_never_contains_private_or_other_group_records(self):
         await self.seed()
         request = self.request()

@@ -1,7 +1,7 @@
 name: astrbot_plugin_directional_memory
 display_name: 单向个人记忆
 desc: 本人私聊可召回本人各群记忆，群聊严格限定当前群与当前发言人；本地存储，无额外模型调用。
-version: 0.1.0
+version: 0.1.1
 author: Vman-coffee
 repo: https://github.com/Vman-coffee/WhaleBot
 astrbot_version: ">=4.29.3"

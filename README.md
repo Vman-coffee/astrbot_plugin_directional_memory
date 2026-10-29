@@ -77,6 +77,10 @@
 
 本插件的事实记忆按用户而非人格隔离：同一平台、同一机器人账号、同一用户切换人格时，事实记录仍相同。不同机器人账号或不同平台不会自动合并。启用名单只认真实 ID，不做昵称合并。
 
+人格由 AstrBot 当前会话的自定义规则决定。主人在群内也使用该群指定的人格，私聊人格只用于私聊。本插件不写入人格 ID、人格规则、系统提示词或会话绑定，记忆中的角色、关系和语气指令不能替代当前人格。
+
+开启 `unique_session`（群内按用户隔离）时，群内会话 ID 包含 `用户ID_群号`。此版本 AstrBot 的人格规则按完整会话 ID 精确读取：仅绑定 `GroupMessage:群号` 不会自动覆盖 `GroupMessage:用户ID_群号`，需为实际会话设置对应人格。不要为了继承群人格而把私聊与群聊合并。
+
 ## 验收
 
 用两个群、两个账号分别测试，使用虚构且无敏感性的标记：
@@ -99,7 +103,7 @@ python -m unittest discover -s plugins/astrbot_plugin_directional_memory/tests -
 PYTHONPATH=/AstrBot python -B /path/to/astrbot_plugin_directional_memory/tests/runtime_smoke.py
 ```
 
-它只构造虚构事件，使用临时数据库并模拟会话权限查询，不发送 QQ 消息。本次在 AstrBot 4.29.3 验证了 54 项单元测试和 50 项真实 API 检查。
+它只构造虚构事件，使用临时数据库并模拟会话权限查询，不发送 QQ 消息。AstrBot 4.29.3 验收包含单元测试和 50 项真实 API 检查。
 
 ## 成本、边界与回滚
 
