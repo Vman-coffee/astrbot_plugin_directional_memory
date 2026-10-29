@@ -1,0 +1,15 @@
+{
+  "enabled": {"description": "启用单向个人记忆", "type": "bool", "default": true},
+  "allowed_user_ids": {"description": "启用的真实用户 ID", "type": "list", "default": [], "hint": "留空表示所有用户分别使用各自隔离的记忆；试用时建议仅填主人的 QQ 号。不支持昵称或身份映射。"},
+  "capture_group_messages": {"description": "记录用户自己的群聊文字", "type": "bool", "default": true, "hint": "仅记录实际发送者的直接文字，不读取群友转发、图片、引用原文或机器人回复。"},
+  "capture_private_messages": {"description": "记录私聊文字", "type": "bool", "default": true, "hint": "私聊记录仅在同一人的私聊可见，群聊永不读取。关闭后停止新增；删除旧记录须使用忘记命令。"},
+  "inject_in_private": {"description": "私聊汇总本人各来源记忆", "type": "bool", "default": true},
+  "inject_in_group": {"description": "群聊注入本人本群记忆", "type": "bool", "default": true, "hint": "只读取当前真实发言人在当前群的记录，永不读取私聊和其他群。"},
+  "min_message_chars": {"description": "自动记录最短字符数", "type": "int", "default": 4, "hint": "范围 1–100；命令消息和机器人自身消息不自动记录。"},
+  "max_source_chars": {"description": "每条来源最多保存字符数", "type": "int", "default": 1200, "hint": "范围 100–4000，超长文字截断；本插件不保存完整聊天档案。"},
+  "retention_days": {"description": "记忆保留天数", "type": "int", "default": 180, "hint": "范围 1–3650；过期记录不参与召回，并在后续写入时清理。"},
+  "max_records_per_user": {"description": "每人最多保留记录数", "type": "int", "default": 1000, "hint": "范围 10–10000，按平台＋机器人＋用户计算，超限删除最旧记录。"},
+  "recall_limit": {"description": "每次最多召回条数", "type": "int", "default": 5, "hint": "范围 1–20；本地关键词匹配与近期回退，不额外调用模型或向量服务。"},
+  "max_inject_chars": {"description": "每次注入总字符预算", "type": "int", "default": 1200, "hint": "范围 300–6000，包含来源、时间和提示头尾；字符数不等于 Token。"},
+  "skip_sensitive_messages": {"description": "跳过明显含凭据的内容", "type": "bool", "default": true, "hint": "规则识别密码、API Key、Bearer 等常见形式，不是完备的敏感信息检测；不要主动向机器人发送凭据。"}
+}
