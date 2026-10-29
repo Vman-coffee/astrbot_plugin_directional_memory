@@ -1,6 +1,6 @@
 # 单向个人记忆（Directional Memory）
 
-适用于 AstrBot 4.29.3+ 的独立插件，通过代码限制记忆读取方向，而不是依靠提示词要求模型保密。
+独立仓库：[Vman-coffee/astrbot_plugin_directional_memory](https://github.com/Vman-coffee/astrbot_plugin_directional_memory)。当前版本 0.1.1，已在 AstrBot 4.29.3 验证。通过代码限制记忆读取方向，而不是依靠提示词要求模型保密。
 
 | 当前请求 | 同一人的私聊记录 | 同一人在当前群的记录 | 同一人在其他群的记录 | 其他人的记录 |
 | --- | --- | --- | --- | --- |
@@ -23,9 +23,21 @@
 
 ## 安装
 
-本仓库中插件位于 `plugins/astrbot_plugin_directional_memory/`。把整个目录复制到 AstrBot 的 `data/plugins/`，目录中应直接包含 `metadata.yaml`、`main.py`、`store.py` 和 `_conf_schema.json`，然后在 WebUI 重载插件或重启 AstrBot。
+在 AstrBot WebUI 的插件管理中，使用“从链接安装”并填写：
 
-也可以把上述目录内容打包成 ZIP（文件在压缩包根目录），通过 AstrBot 的本地插件上传入口安装。仓库根目录不是单插件目录，不要将整个 WhaleBot 仓库当作单插件安装。
+```text
+https://github.com/Vman-coffee/astrbot_plugin_directional_memory
+```
+
+也可以手动克隆到 AstrBot 的插件目录：
+
+```sh
+git clone https://github.com/Vman-coffee/astrbot_plugin_directional_memory.git /AstrBot/data/plugins/astrbot_plugin_directional_memory
+```
+
+目录中应直接包含 `metadata.yaml`、`main.py`、`store.py` 和 `_conf_schema.json`，然后在 WebUI 重载插件或重启 AstrBot。已安装同名插件时不要重复覆盖目录，先备份数据和配置，再使用 WebUI 更新或替换代码。
+
+也可以把本仓库内容打包成 ZIP，通过 AstrBot 的本地插件上传入口安装。本仓库根目录就是单插件目录；WhaleBot 主项目仅通过子模块引用插件，不要把整个 WhaleBot 仓库当作单插件安装。
 
 无第三方 Python 依赖。数据文件为：
 
@@ -94,7 +106,7 @@
 测试不要求发送真实私密内容。单元测试使用临时 SQLite 数据库和模拟事件，不访问部署数据：
 
 ```text
-python -m unittest discover -s plugins/astrbot_plugin_directional_memory/tests -v
+python -B -m unittest discover -s tests -v
 ```
 
 真实 AstrBot API 的额外验收脚本为 `tests/runtime_smoke.py`，需在 AstrBot 环境下单独运行：
@@ -113,4 +125,4 @@ SQLite 保存可读原文，需保护 Docker 数据卷和备份；启用名单�
 
 本插件约束自己的存储、命令和注入，不会替其他插件、已有会话历史或用户手工粘贴的内容建立权限边界。不要同时开启其他插件的全局共享或私聊→群聊功能。规则识别凭据只是辅助，不能代替谨慎处理敏感数据。
 
-简单回退可在 WebUI 停用本插件，现有 AstrBot、LivingMemory 和聊天策略不变；新数据库保留供备份。完整环境回滚点见仓库 `backups/pre-directional-memory-20261028-231331/ROLLBACK.md`（仅本机存在，含私人数据，不提交）。
+简单回退可在 WebUI 停用本插件，现有 AstrBot、LivingMemory 和聊天策略不变；新数据库保留供备份。更换代码版本时先备份 `data/config/astrbot_plugin_directional_memory_config.json` 和整个 `data/plugin_data/astrbot_plugin_directional_memory/`，停用插件后再备份 SQLite 文件。只读源码仓库不包含部署数据、QQ 令牌、聊天记录或私人备份。WhaleBot 部署环境的完整回滚说明保留在该主项目本机的 `backups/` 目录。
